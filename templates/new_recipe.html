@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="page">
+    <h1>Nueva receta</h1>
+
+    <form id="new-recipe-form" class="recipe-form">
+        <label>Título
+            <input id="title" required>
+        </label>
+
+        <label>Ingredientes
+            <input id="ingredient-input" placeholder="Escribe un ingrediente y presiona Enter">
+        </label>
+        <ul id="ingredients-list" class="dynamic-list"></ul>
+
+        <label>Preparación (Presiona Enter para añadir cada paso)
+            <input id="step-input" placeholder="Escribe un paso y presiona Enter">
+        </label>
+        <ol id="steps-list" class="dynamic-list"></ol>
+
+        <div class="form-actions">
+            <button type="submit" class="btn primary">Crear receta</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/new.js"></script>
+{% endblock %}

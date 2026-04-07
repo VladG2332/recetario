@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="page detail-page">
+    <h1>{{ recipe.title }}</h1>
+
+    <div class="detail-columns">
+        <div>
+            <h3>Ingredientes</h3>
+            <ul>
+                {% for ing in (recipe.ingredients or '').split(',') if ing.strip() %}
+                <li>{{ ing.strip() }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h3>Preparación</h3>
+            <ol>
+                {% for s in (recipe.steps or '').split('\n') if s.strip() %}
+                <li>{{ s.strip() }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <div class="form-actions" style="margin-top:18px">
+        <button id="btn-delete" class="btn">Eliminar receta</button>
+        <button id="btn-edit" class="btn primary">Modificar receta</button>
+    </div>
+
+    <!-- Delete confirm modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Confirmar eliminación</h3>
+            <p>¿Estás seguro que quieres eliminar esta receta?</p>
+            <div class="form-actions">
+                <button id="confirm-delete" class="btn primary">Eliminar</button>
+                <button id="cancel-delete" class="btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit modal (reuses create form UI) -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Modificar receta</h3>
+            <form id="edit-form">
+                <label>Título
+                    <input id="edit-title" required>
+                </label>
+                <label>Ingredientes
+                    <input id="edit-ingredient-input" placeholder="Escribe un ingrediente y presiona Enter">
+                </label>
+                <ul id="edit-ingredients-list" class="dynamic-list"></ul>
+                <label>Preparación
+                    <input id="edit-step-input" placeholder="Escribe un paso y presiona Enter">
+                </label>
+                <ol id="edit-steps-list" class="dynamic-list"></ol>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Guardar cambios</button>
+                    <button type="button" id="edit-cancel" class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>const RECIPE_ID = {{ recipe.id }};</script>
+<script src="/static/js/detail.js"></script>
+{% endblock %}

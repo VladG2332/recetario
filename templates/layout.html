@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Recetario Leewenhoek</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="theme-color" content="#f8f6f0">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <img src="/static/img/logo_leewenhoek.png" alt="logo" class="logo">
+                <h2 class="sidebar-title">Recetario Leewenhoek</h2>
+            </div>
+            <nav class="menu">
+                <a href="/new" class="menu-item">Nueva receta</a>
+                <a href="/recipes" class="menu-item">Ver recetas</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

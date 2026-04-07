@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="page">
+    <h1>Recetas</h1>
+    <div class="cards-grid">
+        {% for r in recipes %}
+        <article class="card">
+            <h3>{{ r.title }}</h3>
+            <div style="flex:1"></div>
+            <div class="form-actions">
+                <a class="btn" href="/recipes/{{ r.id }}">Ver receta</a>
+            </div>
+        </article>
+        {% else %}
+        <p>No hay recetas aún.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<!-- No extra JS needed; uses server-render -->
+{% endblock %}

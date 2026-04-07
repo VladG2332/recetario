@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetario Leewenhoek</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="theme-color" content="#f8f6f0">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Recetario Leewenhoek</h1>
+        <button id="btn-new" class="btn">Nueva receta</button>
+    </header>
+
+    <main class="container">
+        <section id="cards" class="cards-grid">
+            <!-- Las tarjetas de recetas se inyectan aquí -->
+        </section>
+    </main>
+
+    <!-- Modal para crear/editar -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Crear receta</h2>
+            <form id="recipe-form">
+                <input type="hidden" id="recipe-id">
+                <label>Título
+                    <input id="title" name="title" required>
+                </label>
+                <label>Descripción
+                    <textarea id="description" name="description"></textarea>
+                </label>
+                <label>Ingredientes (separados por comas)
+                    <textarea id="ingredients" name="ingredients"></textarea>
+                </label>
+                <label>Preparación / pasos
+                    <textarea id="steps" name="steps"></textarea>
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Guardar</button>
+                    <button type="button" id="btn-cancel" class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
