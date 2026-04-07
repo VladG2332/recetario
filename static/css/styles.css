@@ -46,10 +46,27 @@ textarea{min-height:80px}
 .detail-columns{display:flex;gap:24px}
 .detail-columns > div{flex:1}
 
+/* Hide mobile header by default; only show via media query on small screens */
+.mobile-header{display:none}
+
 @media (max-width:800px){
     .sidebar{display:none}
     .main-content{padding:12px}
     .app-shell{display:block}
     .detail-columns{flex-direction:column}
+    .mobile-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#0b63b3;color:#fff}
+    .mobile-header .btn{background:transparent;border:none;color:#fff;font-size:20px}
+    .mobile-logo{height:36px}
+    /* when sidebar is open, show it as overlay */
+    .sidebar.open{display:flex;position:fixed;left:0;top:0;bottom:0;z-index:120;box-shadow:4px 0 18px rgba(0,0,0,0.2)}
+    body.sidebar-visible{overflow:hidden}
+    .overlay{display:block}
+}
+
+@media (max-width:420px){
+    .menu-item{padding:10px}
+    .btn{padding:8px 10px;font-size:14px}
+    .card{padding:12px}
+    .sidebar{width:200px}
 }
 

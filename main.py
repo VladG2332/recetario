@@ -1,31 +1,52 @@
 from flask import Flask, render_template, request, jsonify, abort, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pymysql
+import psycopg2
+import urllib.parse
 import os
+from dotenv import load_dotenv
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+# Load environment variables from .env (if present)
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 app = Flask(__name__)
 
-DB_USER = 'root'
-DB_PASS = 'root'
-DB_HOST = 'localhost'
-DB_PORT = 3306
-DB_NAME = 'recetario'
+# Read Postgres connection from environment variables (loaded from .env)
+DB_HOST = os.environ.get('DB_HOST')
+DB_USER = os.environ.get('DB_USER')
+DB_PASS = os.environ.get('DB_PASS')
+DB_NAME = os.environ.get('DB_NAME')
+DB_PORT = os.environ.get('DB_PORT')
 
+# Validate required env vars
+missing = [k for k in ('DB_HOST','DB_USER','DB_PASS','DB_NAME','DB_PORT') if not os.environ.get(k)]
+if missing:
+    msg = f"Missing required environment variables: {', '.join(missing)}. Please set them in .env or environment."
+    print(msg)
+    raise SystemExit(1)
+
+# Convert port to int
+DB_PORT = int(DB_PORT)
+
+# Try to create the database if it doesn't exist (best-effort). Use psycopg2
 try:
-    # Use PyMySQL directly to ensure the database exists
-    conn = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, port=DB_PORT)
-    with conn.cursor() as cur:
-        cur.execute(f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
-    conn.commit()
-    conn.close()
+    tmp_conn = psycopg2.connect(host=DB_HOST, user=DB_USER, password=DB_PASS, port=DB_PORT, dbname='postgres')
+    tmp_conn.autocommit = True
+    with tmp_conn.cursor() as cur:
+        # Use safe identifier quoting
+        cur.execute("SELECT 1 FROM pg_database WHERE datname=%s", (DB_NAME,))
+        exists = cur.fetchone()
+        if not exists:
+            cur.execute(f'CREATE DATABASE "{DB_NAME}"')
+    tmp_conn.close()
 except Exception as e:
-    # Print a warning so it's visible in the logs if DB creation fails
-    print('Warning: could not create database', e)
+    print('Warning: could not ensure Postgres database exists (continuing).', e)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# Build SQLAlchemy URL (quote password)
+db_pass_quoted = urllib.parse.quote_plus(DB_PASS)
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{DB_USER}:{db_pass_quoted}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

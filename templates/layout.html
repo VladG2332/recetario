@@ -9,6 +9,13 @@
     {% block head %}{% endblock %}
 </head>
 <body>
+    <!-- Mobile header (shown on small screens) -->
+    <header class="mobile-header">
+        <button id="mobile-menu-btn" class="btn">☰</button>
+        <img src="/static/img/logo_leewenhoek.svg" class="mobile-logo" alt="logo">
+        <div style="width:36px"></div>
+    </header>
+
     <div class="app-shell">
         <aside class="sidebar">
             <div class="sidebar-top">
@@ -27,5 +34,6 @@
     </div>
 
     {% block scripts %}{% endblock %}
+    <script src="/static/js/layout.js"></script>
 </body>
 </html>
