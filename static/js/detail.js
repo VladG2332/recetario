@@ -34,13 +34,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
         editModal.classList.remove('hidden');
     });
 
-    // allow adding ingredients/steps in modal
-    document.getElementById('edit-ingredient-input').addEventListener('keydown', (e)=>{
-        if(e.key==='Enter'){ e.preventDefault(); const v=e.target.value.trim(); if(v){ const li=document.createElement('li'); li.textContent=v; const x=document.createElement('button'); x.className='btn'; x.textContent='x'; x.style.marginLeft='8px'; x.addEventListener('click', ()=>li.remove()); li.appendChild(x); document.getElementById('edit-ingredients-list').appendChild(li); e.target.value=''; }}
-    });
-    document.getElementById('edit-step-input').addEventListener('keydown', (e)=>{
-        if(e.key==='Enter'){ e.preventDefault(); const v=e.target.value.trim(); if(v){ const li=document.createElement('li'); li.textContent=v; const x=document.createElement('button'); x.className='btn'; x.textContent='x'; x.style.marginLeft='8px'; x.addEventListener('click', ()=>li.remove()); li.appendChild(x); document.getElementById('edit-steps-list').appendChild(li); e.target.value=''; }}
-    });
+    // allow adding ingredients/steps in modal (prevent mobile "Next" behavior)
+    const editIngInput = document.getElementById('edit-ingredient-input');
+    const editStepInput = document.getElementById('edit-step-input');
+    function addEditIngredient(v){ const li=document.createElement('li'); li.textContent=v; const x=document.createElement('button'); x.className='btn'; x.textContent='x'; x.style.marginLeft='8px'; x.addEventListener('click', ()=>li.remove()); li.appendChild(x); document.getElementById('edit-ingredients-list').appendChild(li); }
+    function addEditStep(v){ const li=document.createElement('li'); li.textContent=v; const x=document.createElement('button'); x.className='btn'; x.textContent='x'; x.style.marginLeft='8px'; x.addEventListener('click', ()=>li.remove()); li.appendChild(x); document.getElementById('edit-steps-list').appendChild(li); }
+
+    const editIngHandler = (e)=>{ if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); const v=e.target.value.trim(); if(v){ addEditIngredient(v); e.target.value=''; } } };
+    const editStepHandler = (e)=>{ if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); const v=e.target.value.trim(); if(v){ addEditStep(v); e.target.value=''; } } };
+    editIngInput.addEventListener('keydown', editIngHandler, {capture:true});
+    editIngInput.addEventListener('keypress', editIngHandler, {capture:true});
+    editStepInput.addEventListener('keydown', editStepHandler, {capture:true});
+    editStepInput.addEventListener('keypress', editStepHandler, {capture:true});
 
     editCancel.addEventListener('click', ()=>{ editModal.classList.add('hidden'); });
 

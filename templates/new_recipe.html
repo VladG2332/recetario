@@ -6,16 +6,15 @@
 
     <form id="new-recipe-form" class="recipe-form">
         <label>Título
-            <input id="title" required>
+            <input id="title" type="text" required autocomplete="name">
         </label>
 
         <label>Ingredientes
-            <input id="ingredient-input" placeholder="Escribe un ingrediente y presiona Enter">
+            <input id="ingredient-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un ingrediente y presiona Enter">
         </label>
         <ul id="ingredients-list" class="dynamic-list"></ul>
-
         <label>Preparación (Presiona Enter para añadir cada paso)
-            <input id="step-input" placeholder="Escribe un paso y presiona Enter">
+            <input id="step-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un paso y presiona Enter">
         </label>
         <ol id="steps-list" class="dynamic-list"></ol>
 

@@ -37,21 +37,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
         });
     }
 
-    ingredientInput.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){
-            e.preventDefault();
-            const v = ingredientInput.value.trim();
-            if(v){ ingredients.push(v); ingredientInput.value=''; renderIngredients(); }
-        }
-    });
+    function addIngredientFromInput(){
+        const v = ingredientInput.value.trim();
+        if(v){ ingredients.push(v); ingredientInput.value=''; renderIngredients(); }
+    }
+    function addStepFromInput(){
+        const v = stepInput.value.trim();
+        if(v){ steps.push(v); stepInput.value=''; renderSteps(); }
+    }
 
-    stepInput.addEventListener('keydown', (e)=>{
+    // Prevent mobile 'Next' default behavior and ensure Enter adds the item
+    const ingredientHandler = (e)=>{
         if(e.key === 'Enter'){
-            e.preventDefault();
-            const v = stepInput.value.trim();
-            if(v){ steps.push(v); stepInput.value=''; renderSteps(); }
+            e.preventDefault(); e.stopPropagation(); addIngredientFromInput();
         }
-    });
+    };
+    const stepHandler = (e)=>{
+        if(e.key === 'Enter'){
+            e.preventDefault(); e.stopPropagation(); addStepFromInput();
+        }
+    };
+
+    ingredientInput.addEventListener('keydown', ingredientHandler, {capture:true});
+    ingredientInput.addEventListener('keypress', ingredientHandler, {capture:true});
+    stepInput.addEventListener('keydown', stepHandler, {capture:true});
+    stepInput.addEventListener('keypress', stepHandler, {capture:true});
 
     form.addEventListener('submit', async (e)=>{
         e.preventDefault();
