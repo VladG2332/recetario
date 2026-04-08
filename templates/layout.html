@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#f8f6f0">
     {% block head %}{% endblock %}
 </head>
-<body>
+<body data-page="{{ page|default('') }}">
     <!-- Mobile header (shown on small screens) -->
     <header class="mobile-header">
         <button id="mobile-menu-btn" class="btn">☰</button>
@@ -23,6 +23,7 @@
                 <h2 class="sidebar-title">Recetario Leewenhoek</h2>
             </div>
             <nav class="menu">
+                <a href="/" class="menu-item">Inicio</a>
                 <a href="/new" class="menu-item">Nueva receta</a>
                 <a href="/recipes" class="menu-item">Ver recetas</a>
             </nav>

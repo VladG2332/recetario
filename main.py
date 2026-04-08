@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, abort, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import json
 import psycopg2
 import urllib.parse
 import os
@@ -83,7 +84,35 @@ except Exception:
 
 @app.route('/')
 def index():
-    return redirect(url_for('recipes_page'))
+    # Dashboard: compute stats
+    recipes = Recipe.query.order_by(Recipe.created_at.desc()).all()
+    total = len(recipes)
+    costs = []
+    for r in recipes:
+        cost = 0.0
+        if r.ingredients:
+            try:
+                parsed = json.loads(r.ingredients)
+                if isinstance(parsed, list):
+                    cost = sum(float(i.get('cost', 0) or 0) for i in parsed)
+            except Exception:
+                # legacy comma-separated ingredients have no cost
+                cost = 0.0
+        costs.append((r, cost))
+
+    total_cost_sum = sum(c for _, c in costs)
+    avg_cost = (total_cost_sum / total) if total > 0 else 0.0
+    cheapest = None
+    most_expensive = None
+    if costs:
+        cheapest = min(costs, key=lambda x: x[1])[0]
+        most_expensive = max(costs, key=lambda x: x[1])[0]
+
+    # prepare simple dicts for template
+    cheapest_info = {'id': cheapest.id, 'title': cheapest.title, 'cost': next(c for r,c in costs if r.id==cheapest.id)} if cheapest else None
+    expensive_info = {'id': most_expensive.id, 'title': most_expensive.title, 'cost': next(c for r,c in costs if r.id==most_expensive.id)} if most_expensive else None
+
+    return render_template('index.html', total_recipes=total, avg_cost=avg_cost, cheapest=cheapest_info, most_expensive=expensive_info, page='dashboard')
 
 
 @app.route('/new')
@@ -95,13 +124,58 @@ def new_page():
 def recipes_page():
     # server-render list page (shows titles and link to detail)
     recipes = Recipe.query.order_by(Recipe.created_at.desc()).all()
-    return render_template('recipes.html', recipes=recipes)
+    recipes_info = []
+    for r in recipes:
+        ingredient_count = 0
+        total_cost = 0.0
+        if r.ingredients:
+            try:
+                parsed = json.loads(r.ingredients)
+                if isinstance(parsed, list):
+                    ingredient_count = len(parsed)
+                    total_cost = sum(float(i.get('cost', 0) or 0) for i in parsed)
+            except Exception:
+                # legacy comma-separated string
+                ingredient_count = len([s for s in (r.ingredients or '').split(',') if s.strip()])
+                total_cost = 0.0
+        recipes_info.append({
+            'id': r.id,
+            'title': r.title,
+            'description': r.description,
+            'created_at': r.created_at,
+            'ingredient_count': ingredient_count,
+            'total_cost': total_cost
+        })
+    return render_template('recipes.html', recipes=recipes_info, page='recipes')
 
 
 @app.route('/recipes/<int:recipe_id>')
 def recipe_page(recipe_id):
     r = Recipe.query.get_or_404(recipe_id)
-    return render_template('recipe_detail.html', recipe=r)
+    # Try to parse ingredients as JSON (structured ingredients with cost etc.)
+    ingredients_list = []
+    total_cost = 0.0
+    if r.ingredients:
+        try:
+            parsed = json.loads(r.ingredients)
+            if isinstance(parsed, list):
+                ingredients_list = parsed
+        except Exception:
+            # fallback to legacy comma-separated string
+            ingredients_list = []
+            for ing in (r.ingredients or '').split(','):
+                ing = ing.strip()
+                if not ing:
+                    continue
+                # store as simple object with title only
+                ingredients_list.append({'title': ing, 'quantity': '', 'unit': '', 'cost': 0})
+    # compute total cost
+    try:
+        total_cost = sum(float(i.get('cost', 0) or 0) for i in ingredients_list)
+    except Exception:
+        total_cost = 0.0
+
+    return render_template('recipe_detail.html', recipe=r, ingredients_list=ingredients_list, total_cost=total_cost)
 
 
 @app.route('/api/recipes', methods=['GET'])

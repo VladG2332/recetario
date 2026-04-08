@@ -8,10 +8,19 @@
         <div>
             <h3>Ingredientes</h3>
             <ul>
-                {% for ing in (recipe.ingredients or '').split(',') if ing.strip() %}
-                <li>{{ ing.strip() }}</li>
-                {% endfor %}
+                {% if ingredients_list %}
+                    {% for ing in ingredients_list %}
+                        <li>
+                            {{ ing.title }}{% if ing.quantity %} - {{ ing.quantity }}{{ ing.unit }}{% endif %} ( ${{ '%.2f'|format(ing.cost|float) }} )
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    {% for ing in (recipe.ingredients or '').split(',') if ing.strip() %}
+                        <li>{{ ing.strip() }}</li>
+                    {% endfor %}
+                {% endif %}
             </ul>
+            <div style="margin-top:8px; font-size: 1.2rem; font-weight: bold">Costo total por receta: ${{ '%.2f'|format(total_cost) }}</div>
         </div>
         <div>
             <h3>Preparación</h3>
@@ -49,9 +58,13 @@
                     <input id="edit-title" type="text" required autocomplete="name">
                 </label>
                 <label>Ingredientes
-                    <input id="edit-ingredient-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un ingrediente y presiona Enter">
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <button type="button" id="btn-open-edit-ingredient" class="btn">Agregar ingrediente</button>
+                        <small>Agregar ingrediente con cantidad y costo</small>
+                    </div>
                 </label>
                 <ul id="edit-ingredients-list" class="dynamic-list"></ul>
+                <div style="margin-top:8px;margin-bottom:8px">Costo total por receta (editar): $<span id="edit-total-cost">0.00</span></div>
                 <label>Preparación
                     <input id="edit-step-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un paso y presiona Enter">
                 </label>
@@ -59,6 +72,36 @@
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Guardar cambios</button>
                     <button type="button" id="edit-cancel" class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit ingredient modal -->
+    <div id="edit-ingredient-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Agregar ingrediente (editar)</h3>
+            <form id="edit-ingredient-form">
+                <label>Título
+                    <input id="edit-ing-title" type="text" required>
+                </label>
+                <label>Cantidad
+                    <input id="edit-ing-quantity" type="text" inputmode="decimal" placeholder="ej. 200">
+                </label>
+                <label>Unidad
+                    <select id="edit-ing-unit">
+                        <option value="g">gramos</option>
+                        <option value="ml">mililitro</option>
+                        <option value="L">Litro</option>
+                        <option value="kg">Kilo</option>
+                    </select>
+                </label>
+                <label>Costo
+                    <input id="edit-ing-cost" type="number" step="0.01" min="0" value="0">
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Agregar</button>
+                    <button type="button" id="edit-ingredient-cancel" class="btn">Cancelar</button>
                 </div>
             </form>
         </div>

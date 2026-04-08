@@ -1,3 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<main class="container">
+    <section id="cards" class="cards-grid dashboard-grid">
+        <article class="card">
+            <h3>Total de recetas</h3>
+            <div class="meta">Cantidad de recetas creadas</div>
+            <p style="font-size:1.5rem;font-weight:600">{{ total_recipes }}</p>
+        </article>
+        <article class="card">
+            <h3>Costo promedio por receta</h3>
+            <div class="meta">Promedio del costo de ingredientes por receta</div>
+            <p style="font-size:1.2rem;font-weight:600">${{ '%.2f'|format(avg_cost) }}</p>
+        </article>
+        <article class="card">
+            <h3>Receta más barata</h3>
+            {% if cheapest %}
+            <p style="font-size:2rem;font-weight:600"><a href="/recipes/{{ cheapest.id }}">{{ cheapest.title }}</a></p>
+            <p style="font-size:2rem;font-weight:600">${{ '%.2f'|format(cheapest.cost) }}</p>
+            {% else %}
+            <p>N/A</p>
+            {% endif %}
+        </article>
+        <article class="card">
+            <h3>Receta más cara</h3>
+            {% if most_expensive %}
+            <p style="font-size:2rem;font-weight:600"><a href="/recipes/{{ most_expensive.id }}">{{ most_expensive.title }}</a></p>
+            <p style="font-size:2rem;font-weight:600">${{ '%.2f'|format(most_expensive.cost) }}</p>
+            {% else %}
+            <p>N/A</p>
+            {% endif %}
+        </article>
+    </section>
+
+    <!-- Modal para crear/editar (dashboard) -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Crear receta</h2>
+            <form id="recipe-form">
+                <input type="hidden" id="recipe-id">
+                <label>Título
+                    <input id="title" name="title" required>
+                </label>
+                <label>Descripción
+                    <textarea id="description" name="description"></textarea>
+                </label>
+                <label>Ingredientes (separados por comas)
+                    <textarea id="ingredients" name="ingredients"></textarea>
+                </label>
+                <label>Preparación / pasos
+                    <textarea id="steps" name="steps"></textarea>
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Guardar</button>
+                    <button type="button" id="btn-cancel" class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js"></script>
+{% endblock %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,8 +80,34 @@
     </header>
 
     <main class="container">
-        <section id="cards" class="cards-grid">
-            <!-- Las tarjetas de recetas se inyectan aquí -->
+        <section id="cards" class="cards-grid" data-page="dashboard">
+            <article class="card">
+                <h3>Total de recetas</h3>
+                <div class="meta">Cantidad de recetas creadas</div>
+                <p style="font-size:1.5rem;font-weight:600">{{ total_recipes }}</p>
+            </article>
+            <article class="card">
+                <h3>Costo promedio por receta</h3>
+                <div class="meta">Promedio del costo de ingredientes por receta</div>
+                <p style="font-size:1.2rem;font-weight:600">${{ '%.2f'|format(avg_cost) }}</p>
+            </article>
+            <article class="card">
+                <h3>Receta más barata</h3>
+                <div class="meta">Título y costo</div>
+                {% if cheapest %}
+                <p style="font-size:1rem;font-weight:600"><a href="/recipes/{{ cheapest.id }}">{{ cheapest.title }}</a> — ${{ '%.2f'|format(cheapest.cost) }}</p>
+                {% else %}
+                <p>N/A</p>
+                {% endif %}
+            </article>
+            <article class="card">
+                <h3>Receta más cara</h3>
+                <div class="meta">Título y costo</div>
+                {% if most_expensive %}
+                <p style="font-size:1rem;font-weight:600"><a href="/recipes/{{ most_expensive.id }}">{{ most_expensive.title }}</a> — ${{ '%.2f'|format(most_expensive.cost) }}</p>
+                {% else %}
+                <p>N/A</p>
+                {% endif %}
         </section>
     </main>
 

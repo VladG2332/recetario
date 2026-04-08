@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const form = document.getElementById('recipe-form');
     const btnCancel = document.getElementById('btn-cancel');
     const modalTitle = document.getElementById('modal-title');
+    const page = document.body.dataset.page || '';
 
     function openModal(edit=false){
         modal.classList.remove('hidden');
@@ -97,6 +98,6 @@ document.addEventListener('DOMContentLoaded', function(){
         return String(s).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});
     }
 
-    // initial load
-    fetchRecipes();
+    // initial load only on recipes list page
+    if(page === 'recipes') fetchRecipes();
 });

@@ -1,50 +1,65 @@
 :root{
-    --bg: #f8f6f0;
-    --card: #ffffff;
-    --accent: #c7612b;
-    --muted: #6b6b6b;
+    --bg: #250836; /* deep slate */
+    --card: #0b1220; /* darker card */
+    --accent: #ff7a59; /* warm orange */
+    --muted: #262627;
+    --glass: rgba(255,255,255,0.04);
 }
-*{box-sizing:border-box;font-family:Segoe UI, Roboto, Arial, sans-serif}
-body{margin:0;background:var(--bg);color:#222}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:linear-gradient(90deg,#fff8f0,#fff);border-bottom:1px solid #eee}
-.topbar h1{margin:0;font-size:1.25rem}
-.btn{background:#fff;border:1px solid #ddd;padding:8px 12px;border-radius:6px;cursor:pointer}
-.btn.primary{background:var(--accent);color:#fff;border-color:transparent}
-.container{padding:20px;max-width:1100px;margin:0 auto}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
-.card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(30,30,30,0.06);display:flex;flex-direction:column}
-.card h3{margin:0 0 8px;font-size:1.05rem}
-.meta{font-size:0.85rem;color:var(--muted);margin-bottom:8px}
-.card p{flex:1;margin:0 0 12px;color:#333}
-.card .actions{display:flex;gap:8px}
-.pill{background:#faf7f5;padding:6px 10px;border-radius:999px;font-size:0.85rem}
+*{box-sizing:border-box;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+.body-light, body{margin:0;background:#ffffff;color:#222;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent);border-bottom:1px solid rgba(255,255,255,0.03)}
+.topbar h1{margin:0;font-size:1.4rem;letter-spacing:0.3px}
+.btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:10px 14px;border-radius:10px;cursor:pointer;color:#fff}
+.btn.primary{background:linear-gradient(90deg,var(--accent),#ff5f3d);color:#fff;border:none;box-shadow:0 6px 20px rgba(255,122,89,0.12)}
+.container{padding:28px;max-width:1200px;margin:0 auto}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+/* Dashboard variant with fixed 2x2 layout - centered and large cards */
+.cards-grid.dashboard-grid{grid-template-columns:repeat(2,1fr);gap:28px;max-width:1100px;margin:12px auto}
+@media (max-width:900px){
+    .cards-grid.dashboard-grid{grid-template-columns:repeat(1,1fr);padding:0 12px}
+}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:16px;box-shadow:0 12px 40px rgba(2,6,23,0.6);display:flex;flex-direction:column;min-height:200px;justify-content:space-between; align-items: center;}
+.card h3{margin:0 0 12px;font-size:1.5rem;color:#f5f7fb}
+.meta{font-size:0.9rem;color:#fff;margin-bottom:12px}
+.card p{margin:0;color:#e6eef6}
+.card .actions{display:flex;gap:12px}
+.pill{background:var(--glass);padding:8px 12px;border-radius:999px;font-size:0.9rem;color:#047c14}
 
 /* Modal */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,10,10,0.35);z-index:60}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(2,6,23,0.6), rgba(2,6,23,0.6));z-index:60}
 .modal.hidden{display:none}
-.modal-content{background:#fff;padding:18px;border-radius:10px;max-width:720px;width:95%;box-shadow:0 12px 40px rgba(10,10,10,0.12)}
-.modal-content h2{margin-top:0}
-form label{display:block;margin:8px 0;font-size:0.95rem}
-input,textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:0.95rem}
-textarea{min-height:80px}
-.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.modal-content{background:linear-gradient(180deg,#071021,#071826);padding:22px;border-radius:14px;max-width:720px;width:94%;box-shadow:0 18px 60px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.03)}
+.modal-content h2{margin-top:0;color:#000000}
+form label{display:block;margin:10px 0;font-size:0.95rem;color:var(--muted)}
+input,textarea,select{width:100%;padding:12px;border:1px solid rgba(255,255,255,0.04);border-radius:10px;background:transparent;color:#000000;font-size:0.95rem}
+textarea{min-height:100px}
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:14px}
 
-@media (max-width:480px){.cards-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}}
+
+@media (max-width:480px){.cards-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:0 8px}}
 
 /* Layout: sidebar + main */
 .app-shell{display:flex;min-height:100vh}
-.sidebar{width:260px;background:#0b63b3;color:#fff;padding:18px 12px;display:flex;flex-direction:column;align-items:center}
-.sidebar .logo{width:110px;height:auto;margin-bottom:8px}
-.sidebar-title{font-size:1rem;text-align:center;margin:0 0 12px}
-.menu{display:flex;flex-direction:column;width:100%}
-.menu-item{display:block;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;margin:6px 0}
-.menu-item:hover{background:rgba(255,255,255,0.06)}
-.main-content{flex:1;padding:24px}
-.page h1{margin-top:0}
+.sidebar{width:260px;background:linear-gradient(180deg,#071a37,#05203a);color:#fff;padding:24px 16px;display:flex;flex-direction:column;align-items:center;border-right:1px solid rgba(255,255,255,0.03)}
+.sidebar .logo{width:120px;height:auto;margin-bottom:12px}
+.sidebar-title{font-size:1.05rem;text-align:center;margin:6px 0 16px;color:#fff}
+.menu{display:flex;flex-direction:column;width:100%;}
+.menu-item{display:block;color:#fff;padding:12px 16px;border-radius:10px;text-decoration:none;margin:8px 0}
+.menu-item:hover{background:rgba(255,255,255,0.03)}
+.menu-item.active{background:linear-gradient(90deg,var(--accent),#ff5f3d);color:#fff;box-shadow:0 8px 30px rgba(255,122,89,0.08)}
+.main-content{flex:1;padding:28px}
+.page h1{margin-top:0;font-size:1.6rem}
 .dynamic-list{margin:8px 0;padding-left:18px}
 .recipe-form input[type=text],.recipe-form input{width:100%}
-.detail-columns{display:flex;gap:24px}
+.detail-columns{display:flex;gap:28px}
 .detail-columns > div{flex:1}
+
+/* Recipe detail styling */
+.detail-page h1{font-size:2rem;margin-bottom:8px}
+.detail-columns h3{font-size:1.1rem;color:#000000}
+.detail-columns ul li, .detail-columns ol li{font-size:1rem;color:#000000;margin-bottom:8px}
+.total-cost{margin-top:14px;font-size:1.25rem;font-weight:700;color:var(--accent)}
+.total-cost span{background:rgba(255,122,89,0.08);padding:6px 10px;border-radius:8px}
 
 /* Hide mobile header by default; only show via media query on small screens */
 .mobile-header{display:none}
@@ -66,7 +81,29 @@ textarea{min-height:80px}
 @media (max-width:420px){
     .menu-item{padding:10px}
     .btn{padding:8px 10px;font-size:14px}
-    .card{padding:12px}
+    .card{padding:16px}
     .sidebar{width:200px}
+}
+
+/* Specific green style for Add Ingredient buttons */
+#btn-open-ingredient-modal, #btn-open-edit-ingredient {
+    background: linear-gradient(90deg,#28a745,#20c06a);
+    color: #e60808;
+    border: none;
+    box-shadow: 0 8px 20px rgba(40,167,69,0.12);
+}
+
+/* Adjust card backgrounds for light theme */
+.card{background:#250836;color:#e6eef6;border:1px solid rgba(15,23,36,0.06);box-shadow:0 6px 24px rgba(12,20,30,0.06)}
+.modal-content{background:#fff;color:#222;border:1px solid rgba(0,0,0,0.06)}
+
+/* Form inputs with thick black borders */
+.recipe-form input[type="text"],
+.recipe-form input[type="number"],
+.recipe-form textarea,
+.recipe-form select {
+    border: 3px solid #000 !important;
+    background: #fff;
+    color: #000;
 }
 

@@ -10,9 +10,13 @@
         </label>
 
         <label>Ingredientes
-            <input id="ingredient-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un ingrediente y presiona Enter">
+            <div style="display:flex;gap:8px;align-items:center">
+                <button type="button" id="btn-open-ingredient-modal" class="btn">Agregar ingrediente</button>
+                <small>Usa el botón para agregar ingredientes con cantidad y costo.</small>
+            </div>
         </label>
         <ul id="ingredients-list" class="dynamic-list"></ul>
+        <div style="margin-top:8px;margin-bottom:8px">Costo total por receta: $<span id="total-cost">0.00</span></div>
         <label>Preparación (Presiona Enter para añadir cada paso)
             <input id="step-input" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" placeholder="Escribe un paso y presiona Enter">
         </label>
@@ -23,6 +27,36 @@
         </div>
     </form>
 </section>
+    <!-- Ingredient modal -->
+    <div id="ingredient-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Agregar ingrediente</h3>
+            <form id="ingredient-form">
+                <label>Título
+                    <input style="border: 3px solid #000;" id="ing-title" type="text" required>
+                </label>
+                <label>Cantidad
+                    <input style="border: 3px solid #000;" id="ing-quantity" type="text" inputmode="decimal" placeholder="ej. 200">
+                </label>
+                <label>Unidad
+                    <select style="border: 3px solid #000;"" id="ing-unit">
+                        <option value="g">gramos</option>
+                        <option value="ml">mililitro</option>
+                        <option value="L">Litro</option>
+                        <option value="kg">Kilo</option>
+                    </select>
+                </label>
+                <label>Costo
+                    <input style="border: 3px solid #000;" id="ing-cost" type="number" step="0.01" min="0" value="0">
+                </label>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Agregar</button>
+                    <button style="background-color: #ce0808;" type="button" id="ingredient-cancel" class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
